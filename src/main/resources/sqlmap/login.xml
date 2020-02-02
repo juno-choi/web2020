@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.project.wcc.model.LoginDao">
+	  <select id="login" resultType="String">
+	  	SELECT ID FROM USER;
+	  </select>
+	  <select id="loginUser" parameterType="map" resultType="com.project.wcc.model.entity.LoginVo">
+	  	SELECT * FROM USER WHERE ID=#{id};
+	  </select>
+	  <select id="idCheck" parameterType="String" resultType="Boolean">
+	  	SELECT ID FROM USER WHERE ID=#{id};
+	  </select>
+	  
+	  <!-- salt 추가할거임 비밀번호 암호화 -->
+	  <insert id="joinUser">
+	  	INSERT USER (ID,PW,NAME,EMAIL,JOIN_DATE,SALT) VALUES (#{id},#{pw},#{name},#{email},NOW(),#{salt});
+	  </insert>
+  </mapper>
