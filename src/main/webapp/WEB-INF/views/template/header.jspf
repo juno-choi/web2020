@@ -1,0 +1,114 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+	String root=request.getContextPath(); 
+	String url=request.getRequestURL().toString(); 
+	String[] strs=url.split("/");
+	int leng = strs.length-7;
+%>
+
+<script type="text/javascript">
+	function login(){
+// 		alert('클릭');
+		var id = $('#loginId').val();
+		var pw = $('#loginPw').val();
+		
+		$.ajax({
+			method:'post',
+			url:'/wcc/user/login',
+			data:'id='+id+'&pw='+pw,
+			dataType:'text',
+			success:function(res){
+				window.location.reload();
+			}
+		});
+	}	
+
+	function logout(){
+		$.ajax({
+			method:'post',
+			url:'/wcc/user/logout',
+			success:function(){
+				window.location.reload();
+			}
+		});
+	}
+
+	$(document).ready(function(){
+		$('#loginId').keypress(function(e){
+			if(e.which==13){
+				login();
+			}
+		});
+		$('#loginPw').keypress(function(e){
+			if(e.which==13){
+				login();
+			}
+		});
+	});
+	
+</script>
+
+<div id="header" class="row">
+<div class="col-sm-12">
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/wcc">WCC</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="/wcc/bbs/bbs">게시판</a></li>
+        <li><a href="#">고객센터</a></li>
+      </ul>
+      
+        <ul class="nav navbar-nav navbar-form navbar-right">
+	        <c:choose>
+	       		<c:when test="${empty sessionScope.user.id}">
+		        	<li>
+			        	<div class="form-group">
+				          <input id="loginId" type="text" class="form-control" placeholder="id" >
+				        </div>
+		        	</li>
+		        	<li>&nbsp;</li>
+		        	<li>
+		       	 		<input id="loginPw" type="password" class="form-control" placeholder="pw">
+		        	</li>
+		        	<li>&nbsp;</li>
+		        	<li>
+		        		<button type="button" class="btn btn-default" onclick="login()">로그인</button> 
+		        	</li>
+		        	<li>&nbsp;</li>
+		        	<li>
+		        			<a href="/wcc/join" class="btn btn-default" role="button" style="color: black; width: 100px; height: 34px; line-height: 0px;">회원가입</a>
+		        	</li>
+		        	</c:when>
+		        	<c:otherwise>
+		        	
+		        	<li>
+		        		<a class="btn btn-default no" role="button" style="color: black; width: 100px; height: 34px; line-height: 0px;">${sessionScope.user.name}</a>
+		        	</li>
+		        	<li>&nbsp;</li>
+		        	<li>
+			        	<button type="button" class="btn btn-default" onclick="logout();">로그아웃</button>
+		        	</li>
+		        	
+	        	</c:otherwise>
+	        </c:choose>
+        </ul>
+	
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+</div>
+</div>
