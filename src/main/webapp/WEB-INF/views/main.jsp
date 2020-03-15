@@ -13,7 +13,7 @@
 		getLocation();
 	});
 
-	//지역정보를 받아 날씨정보를 가져옴 어떠케
+	//지역정보를 받아 날씨정보를 가져옴
 	function getLocation() {
 		  if (navigator.geolocation) { // GPS를 지원하면
 		    navigator.geolocation.getCurrentPosition(function(position) {
