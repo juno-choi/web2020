@@ -13,7 +13,7 @@
 		getLocation();
 	});
 
-	//지역정보를 받아 날씨정보를 가져옴
+	//지역정보를 받아 날씨정보를 가져옴 어떠케
 	function getLocation() {
 		  if (navigator.geolocation) { // GPS를 지원하면
 		    navigator.geolocation.getCurrentPosition(function(position) {
@@ -75,8 +75,8 @@
 			if(http.readyState === 4){
 				if(http.status === 200) {
 					if(http.responseText!=''){
-						var parcelInfo = http.responseText;
-						document.querySelector('#parcelInfo').innerHTML = '<p>'+parcelInfo+'</p>';
+						var parcelInfo = JSON.parse(http.responseText);
+						document.querySelector('#parcelInfo').innerHTML = '<p>배송출발 : '+parcelInfo.fromTime+'</p><p>배송상태 : '+parcelInfo.state+'</p>';
 					}else{
 						alert('배송정보를 가져오는데 실패했습니다..');
 					}
@@ -116,6 +116,7 @@
 					<select class="parcelCompany">
 						<optgroup label="택배선택">
 							<option value="kr.cjlogistics">cj배송</option>
+							<option value="kr.epost">우체국</option>
 							<option>쿠팡</option>
 						</optgroup>
 					</select>

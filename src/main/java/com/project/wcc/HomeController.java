@@ -41,8 +41,8 @@ public class HomeController {
 	
 	@RequestMapping(value = "getParcel", method = RequestMethod.POST, produces="application/json; charset=utf-8")
 	@ResponseBody
-	public String getParcel(@RequestBody Map<String,Object> map) throws Exception {
-		String parcel = mainService.getParcel(map);
+	public Map<String,Object> getParcel(@RequestBody Map<String,Object> map) throws Exception {
+		Map<String,Object> parcel = mainService.getParcel(map);
 		logger.debug("배송 정보 받아서 화면으로 넘깁니다 : "+parcel);
 		return parcel;
 	}

@@ -10,6 +10,6 @@ public interface MainService {
 
 	String getRegId(Map<String, Object> map);
 
-	String getParcel(Map<String, Object> map) throws Exception;
+	Map<String,Object> getParcel(Map<String, Object> map) throws Exception;
 
 }

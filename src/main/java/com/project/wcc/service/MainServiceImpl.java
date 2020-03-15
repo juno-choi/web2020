@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
@@ -158,29 +159,49 @@ public class MainServiceImpl implements MainService{
 	}
 
 	@Override
-	public String getParcel(Map<String, Object> map) throws Exception {
+	public Map<String,Object> getParcel(Map<String, Object> map) throws Exception {
 		logger.debug("배송 정보를 받아옵니다...");
 		
 		String data="";
-		String company = map.get("company").toString();
-		String num = map.get("num").toString();
-		String urlStr = "https://apis.tracker.delivery/carriers/"+company+"/tracks/"+num;
-		
+		String company = map.get("company").toString();		//map에서 배송사 코드를 가져옴
+		String num = map.get("num").toString().trim();		//map에서 송장번호를 가져옴
+		String urlStr = "https://apis.tracker.delivery/carriers/"+company+"/tracks/"+num;	//url을 다음과 같이 요청
+		Map<String, Object> rmap = new HashMap<String, Object>();
 		BufferedReader br =null;
+		
 		try {
 			URL url = new URL(urlStr);
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-			urlConnection.setRequestMethod("GET");
-			br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(),"UTF-8"));
+			urlConnection.setRequestMethod("GET");		//GET방식으로 요청
+			br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(),"UTF-8"));		//가져올 데이터를 UTF-8로 받아줌
 			String line;
 			while((line = br.readLine())!=null) {
-				data += line +"\n";
+				data += line +"\n";		//data에 가져오는 내용을 모두 넣어줌
 			}
-			logger.debug("날씨 정보를 받아오는데 성공했습니다.");
+
+			JSONParser parser = new JSONParser();		//jsonParser를 통해 가져온 String data를 json으로 변환해줌
+			JSONObject json = (JSONObject) parser.parse(data);		//JsonObject로 해당 데이터를 json 객체에 담아줌
+			
+			JSONObject obj = (JSONObject) json.get("from");		//json Object객체에 접근하는 방법
+			String fromTime = obj.get("time").toString();
+			
+			obj = (JSONObject) json.get("to");
+			String toTime = obj.get("time").toString();
+			
+			obj = (JSONObject) json.get("state");
+			String state = obj.get("text").toString();
+			
+			rmap.put("fromTime", fromTime);
+			rmap.put("toTime", toTime);
+			rmap.put("state", state);
+			
+			logger.debug("배송 시작 : "+fromTime + "배송 도착 : "+toTime + "배송 상태 : "+state);
+			
+			logger.debug("배송 정보를 받아오는데 성공했습니다.");
 		} catch (Exception e) {
-			logger.debug("날씨 정보를 받아오는데 실패했습니다...");
+			logger.debug("배송 정보를 받아오는데 실패했습니다...");
 		}
-		return data;
+		return rmap;
 	}
 
 }
