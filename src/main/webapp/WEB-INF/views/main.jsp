@@ -15,7 +15,7 @@
 
 	//지역정보를 받아 날씨정보를 가져옴
 	function getLocation() {
-		  if (navigator.geolocation) { // GPS를 지원하면
+		  if (navigator.geolocation) { // GPS를 지원하면 master는 이렇게 하면?
 		    navigator.geolocation.getCurrentPosition(function(position) {
 		    	
 				var ajax = new XMLHttpRequest();
